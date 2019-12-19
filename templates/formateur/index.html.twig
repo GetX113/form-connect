@@ -1,0 +1,994 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+	<!-- Page top section -->
+
+	<section class="page-top-section set-bg" data-setbg="/img/bg.jpg" style="filter: contrast(0.8);">
+		<div class="container text-dark">
+			<h3>Profile</h3>
+		</div>
+	</section>
+	<!--  Page top end -->
+
+	<div class="row">
+	  <div class="col-md-12 col-sm-12 ">
+	    <div class="x_panel">
+	      <div class="x_content">
+	      	{# ---------------------------------------------------------------------------------------------------------------- #}
+	        <div class="col-md-3 col-sm-3  profile_left">
+	          <div class="profile_img">
+	            <div id="crop-avatar">
+	              <!-- Current avatar -->
+	              <img class="img-thumbnail" src="{{formateur.photo}}" alt="Photo de Profile" title="Change the avatar">
+	            </div>
+	          </div>
+	          <h3>{{formateur.nom}} {{formateur.prenom}}</h3>
+	          <ul class="list-unstyled user_data">
+	            <li class=" text-monospace font-weight-lighter font-italic"><i class="fas fa-history color-default1"></i> <small>{{formateur.lastLogin|date('Y-m-d\\ H:i:s P')}}</small>  
+	            </li>
+	            <li class="text-monospace font-weight-normal"><i class="fa fa-map-marker user-profile-icon color-default1"></i> {{formateur.adresse1}}, {{formateur.ville}}, FR
+	            </li>
+
+	            <li class="text-monospace font-weight-normal">
+	            <i class="fa fa-briefcase user-profile-icon color-default1"></i> Formateur
+	            </li>
+
+	            <li class="m-top-xs text-monospace font-weight-normal">
+	            <i class="fa fa-file-pdf color-default1"></i>
+	            <a href="{{formateur.cv}}" target="_blank" class="text-black">CV</a>
+	            </li>
+	          </ul>
+	          {% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+	          	<button class="btn btn-outline-default" data-toggle="modal" data-target="#editProfileFormateurModal"><i class="fa fa-edit m-right-xs"></i>Editer le profil</button>
+	          {% endif %}
+	          
+	          <br>
+	        </div>
+	        {# ------------------------------------------------------------------------------------------------------------- #}
+
+	        <div class="col-md-9 col-sm-9">
+	        <!-- start recent activity -->
+	          <div class="x_panel">
+	            <div class="x_title">
+	              <h2> Experience Professionnelle </h2>
+	              <ul class="nav navbar-right panel_toolbox">
+	              	{% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+	              		<li><a class="link color-default1" href="#" data-toggle="modal" data-target="#editExperienceFormateurModal"><i class="fas fa-plus fa-lg" aria-hidden="true"></i></a>
+	                	</li>
+	              	{% endif %}
+	                
+	                <li><a class="collapse-link"><i class="fa fa-chevron-up" aria-hidden="true"></i></a>
+	                </li>
+	              </ul>
+	              <div class="clearfix"></div>
+	            </div>
+
+	          <div class="x_content" style="">
+	          {# formation disbonible tabe #}
+	            <div class="table-responsive">
+	              <table class="table table-striped jambo_table bulk_action">
+	                <thead>
+	                  <tr class="headings">
+	                    <th class="column-title">Formations </th>
+	                    <th class="column-title">Date d'obtenu</th>
+	                    <th class="column-title">Description</th>
+	                    <th class="column-title no-link last"><span class="nobr">Attestation</span>
+	                    </th>
+	                    {% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+	                    	<th class="column-title no-link last text-center"><span class="nobr">Supprimer</span>
+	                    	</th>
+	                    {% endif %}
+	                    
+	                    <th class="bulk-actions" colspan="7">
+	                      <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+	                    </th>
+	                  </tr>
+	                </thead>
+
+	                <tbody>
+	                {% for experience in formateur.experience %}
+	                	<tr class="even pointer">                         
+		                    <td class=" "> {{experience.nom}} </td>
+		                    <td class="a-right a-right ">{{experience.date}}</td>
+		                    <td class="a-right a-right ">{{experience.description}}</td>
+		                    <td class=" last">
+		                       <i class="fa fa-file-pdf color-default1"></i> <a href="{{experience.attestation}}">PDF</a>
+		                    </td>
+		                    {% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+		                    	<td class="text-center"><a href="/formateur-profile/delete/experience/{{experience.id}}"><i class="fas fa-trash-alt color-default1"></i></a></td>
+		                    {% endif %}
+		                    
+		                </tr>
+	                {% endfor %}
+	                </tbody>
+	              </table>
+	            </div>
+	          </div>
+	          </div>
+	        </div>
+	        {# -------------------------------------------------------------------------------------------- #}
+	        {% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+	        	<!-- Edit Profile Formateur Model -->
+
+			<div class="modal fade"  id="editProfileFormateurModal" tabindex="-1" role="dialog" aria-labelledby="editProfileFormateurModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default1-bg border-bottom border-warning text-center text-white">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="editProfileFormateurModalLabel">Editer le profil</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+
+			        
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorProfileFormateur" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8 text-center"><img class="img-thumbnail" src="{{formateur.photo}}" alt="Photo de Profile" title="Change the avatar"><br> <h5><span class="font-weight-bold">Editer</span> mes informations personnelles</h5></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	{{ form_start(form, { 'attr': {'class': 'needs-validation', 'onsubmit': 'return validateProfileFormateur()', 'novalidate': true}}) }}
+			                   
+			                    		<div class="form-group mb-3 w-100">
+											<label>Votre Photo</label>
+											{{ form_row(form.photo, { 'attr': { 'class': 'form-control-file', 'id': 'photo', 'value': formateur.photo}}) }}
+											
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre nom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="nomProfileFormateur" name="nom" placeholder="Veuillez saisir votre nom" value="{{formateur.nom}}" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre prenom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="prenomProfileFormateur" name="prenom" placeholder="Veuillez saisir votre prenom" value="{{formateur.prenom}}" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre adresse <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="adresseProfileFormateur" name="adresse" placeholder="Veuillez saisir votre adresse" value="{{formateur.adresse1}}" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre complément d'adresse </label>
+											<input class="form-control" id="adresse2lInscriptionFormateur" name="adresse2" placeholder="Veuillez saisir votre complément d'adresse (Bâtiment, résidence, ...)" value="{{formateur.adresse2}}">
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre code postal <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="codePostalProfileFormateur" name="codePostal" placeholder="Veuillez saisir votre code postal" value="{{formateur.codePostal}}" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre ville <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="villeProfileFormateur" name="ville" placeholder="Veuillez saisir votre ville" value="{{formateur.ville}}" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre téléphone mobile <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="tel" id="mobileProfileFormateur" name="mobile" placeholder="Veuillez saisir votre téléphone mobile" value="{{formateur.mobile}}">
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre téléphone fix</label>
+											<input class="form-control" type="tel" id="fixProfileFormateur" name="fix" placeholder="Veuillez saisir votre téléphone fix" value="{{formateur.fix}}" required>
+										</div>
+										<div class="form-group mb-3 w-100">
+											<label>Votre CV</label>
+											{{ form_row(form.cv, { 'attr': {'class': 'form-control-file', 'id': 'cv', 'value': formateur.cv}}) }}
+											
+										</div>
+
+										<div class="form-group mb-3 text-center">
+											<button class="btn btn-outline-default btn-md" type="submit">Modifier mes informations</button>
+										</div>
+									  
+									
+									{{ form_end(form) }}
+			                    </div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Connexion Formateur -->
+
+			<!-- Edit Experience Professionnelle Formateur Model -->
+
+			<div class="modal fade"  id="editExperienceFormateurModal" tabindex="-1" role="dialog" aria-labelledby="editExperienceFormateurModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default1-bg border-bottom border-warning text-center text-white">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="editExperienceFormateurModalLabel">Experience Professionnelle</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+
+			        
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorExperienceFormateur" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8 text-center"><h5><span class="font-weight-bold">Ajouter</span> une experience professionnelle</h5></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	{{ form_start(formExp, { 'attr': {'class': 'needs-validation', 'onsubmit': 'return validateProfileFormateur()', 'novalidate': true}}) }}
+			                   
+			                    		
+										<div class="form-group mb-3 w-75">
+											<label>Nom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="nomExperienceFormateur" name="nomFormation" placeholder="Veuillez saisir le nom de l'experience professionnelle" value="" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Date d'obtenu <span class="font-weight-bold">(*)</span></label>
+											<input type="date" class="form-control" id="dateExperienceFormateur" name="date" placeholder="Veuillez saisir la date d'obtenu" value="" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Description <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="descriptionExperienceFormateur" name="description" placeholder="Veuillez saisir une description de l'experience professionnelle" value="" required>
+										</div>
+										<div class="form-group mb-3 w-100">
+											<label>Votre attestation</label>
+											{{ form_row(formExp.attestation, { 'attr': {'class': 'form-control-file', 'id': 'attestation', 'value': ''}}) }}
+											
+										</div>
+
+										<div class="form-group mb-3 text-center">
+											{{ form_row(formExp.save, { 'attr': {'class': 'btn btn-outline-default btn-md', 'value': ''}}) }}
+											{# <button class="btn btn-outline-default btn-md" type="button">Ajouter l'Experience</button> #}
+										</div>
+									  
+									
+									{{ form_end(formExp) }}
+			                    </div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Connexion Formateur -->
+	        {% endif %}
+	        
+
+			
+
+			
+
+			{% set departements = formateur.departementDisponibilite|split(', ') %}
+			
+
+
+	        {% if formateur.activeAdmin == 1 %}
+	        {# -------------------------------------------------------------------------------------------- #}
+
+	        <div class="col-md-9 col-sm-9  float-right ">
+	        	<div class="x_panel">
+		            <div class="x_title">
+		              <h2> Disponibilité </h2>
+		              <ul class="nav navbar-right panel_toolbox">
+		               {#  <li><a class="link color-default1" href="#" data-toggle="modal" data-target="#editDisponibiliteFormateurModal"><i class="fas fa-edit fa-lg"></i></a>
+		                </li> #}
+		                <li><a class="collapse-link"><i class="fa fa-chevron-up" aria-hidden="true"></i></a>
+		                </li>
+		              </ul>
+		              <div class="clearfix"></div>
+		            </div>
+
+		            <div class="x_content" style="">
+			           	<div class="" role="tabpanel" data-example-id="togglable-tabs">
+				            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+				              <li role="presentation">
+				                <a href="#tab_content1" class="active show" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Information de disponibilité</a>
+				              </li>
+				              <li role="presentation" class="">
+				                <a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Projets travaillés</a>
+				              </li>
+				            </ul>
+				            {# table 1::::::::::::::::::::::::::::::: #}
+				            <div id="myTabContent" class="tab-content mt-3">
+						        <!-- start recent activity -->
+									
+				                <div role="tabpanel" class="tab-pane active" id="tab_content1" aria-labelledby="home-tab">
+				                	{# Date de disponibilité #}
+				                	<div class="x_panel">
+										<div class="x_title">
+											<h2 class="h5 font-weight-bold"> Date de Disponibilité </h2>
+											<ul class="nav navbar-right panel_toolbox">
+												{% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+													<li><a class="link color-default1" href="#" data-toggle="modal" data-target="#editDateDisponibiliteFormateurModal" id="dateDisponibiliteButton"  ><i class="fas fa-edit fa-lg" aria-hidden="true"></i></a>
+													</li>
+												{% endif %}
+												
+												<li><a class="collapse-link"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+												</li>
+											</ul>
+											<div class="clearfix"></div>
+										</div>
+										<div class="x_content" style="display: none;">
+											<div id="search-date" class="d-flex"></div>
+										</div>
+									</div>
+									{# Frais Annexes #}
+									<div class="x_panel">
+										<div class="x_title">
+											<h2 class="h5 font-weight-bold"> Frais Annexes </h2>
+											<ul class="nav navbar-right panel_toolbox">
+												{% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+													<li><a class="link color-default1" href="#" data-toggle="modal" data-target="#editFraisFormateurModal"><i class="fas fa-edit fa-lg" aria-hidden="true"></i></a>
+													</li>
+												{% endif %}
+												
+												<li><a class="collapse-link"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+												</li>
+											</ul>
+											<div class="clearfix"></div>
+										</div>
+
+										<div class="x_content"  style="display: none;">
+											<table class="table table-striped jambo_table bulk_action">
+							                  <tbody>
+							                    <tr class="even pointer">                         
+							                      <td class=" ">Frais Repas</td>
+							                      <td class="a-right a-right ">
+							                        <div class="col-md-4 xdisplay_inputx form-group row has-feedback">
+							                          <input type="text" class="form-control has-feedback-left" value="{{formateur.fraisRepas|default(0)}}" disabled >
+							                          <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true">
+							                            <i class="fas fa-euro-sign color-default1"></i>
+							                          </span>
+							                        </div>
+							                      </td>
+							                    </tr>
+							                    <tr class="even pointer">                         
+							                      <td class=" ">Frais Hotel</td>
+							                      <td class="a-right a-right ">
+							                        <div class="col-md-4 xdisplay_inputx form-group row has-feedback">
+							                          <input type="text" class="form-control has-feedback-left" value="{{formateur.fraisHotel|default(0)}}" disabled >
+							                          <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true">
+							                            <i class="fas fa-euro-sign color-default1"></i>
+							                          </span>
+							                        </div>
+							                      </td>
+							                    </tr>
+							                    <tr class="even pointer">                         
+							                      <td class=" ">Frais déplacement</td>
+							                      <td class="a-right a-right ">
+							                        <div class="col-md-4 xdisplay_inputx form-group row has-feedback">
+							                          <input type="text" class="form-control has-feedback-left" value="{{formateur.fraisDeplacement|default(0)}}" disabled >
+							                          <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true">
+							                            <i class="fas fa-euro-sign color-default1"></i>
+							                          </span>
+							                        </div>
+							                      </td>
+							                    </tr>
+							                  </tbody>
+							                </table>
+										</div>
+									</div>
+									{# Departement Disponibilité #}
+									<div class="x_panel">
+										<div class="x_title">
+											<h2 class="h5 font-weight-bold"> Departement de Disponibilité </h2>
+											<ul class="nav navbar-right panel_toolbox">
+												{% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+													<li><a class="link color-default1" href="#" data-toggle="modal" data-target="#ediDepartementFormateurModal"><i class="fas fa-edit fa-lg" aria-hidden="true"></i></a>
+													</li>
+												{% endif %}
+												
+												<li><a class="collapse-link"><i class="fa fa-chevron-down" aria-hidden="true"></i></a>
+												</li>
+											</ul>
+											<div class="clearfix"></div>
+										</div>
+
+										<div class="x_content" style="display: none;">
+											{% if formateur.departementDisponibilite == 'all' or formateur.departementDisponibilite is null %}
+												<table class="table table-striped jambo_table bulk_action">
+								                  <tbody>
+								                    <tr class="even pointer">                         
+								                      <td class="text-center">Tous les departement de la France</td>
+								                      
+								                    </tr>
+								                  </tbody>
+								                </table>
+											{% else %}
+												<div class="table-responsive">
+
+							                      <table class="table table-striped jambo_table bulk_action">
+							                        {# start table head #}
+							                        <thead>
+							                          <tr class="headings">
+								                          <th class="column-title text-center">Numéro departements</th>
+								                          <th class="column-title text-center">Nom de departement</th>
+								                          <th class="column-title text-center">Region ou se trouve le departement</th>
+							                          </tr>
+							                        </thead>
+							                        {# end table head #}
+							                        {# start table body #}
+							                        <tbody>
+							                        {% for departement in departements %}
+							                        {% set departement = departement|split('/') %}
+							                        {% set depart = departement[1]|split(' - ') %}
+							                        	<tr class="even pointer">   
+							                        		<td class="text-center"> {{departement[0]}} </td>
+							                        		<td class="text-center"> {{depart[0]}} </td>
+							                        		<td class="text-center"> {{depart[1]}} </td>
+							                          	</tr>
+							                        {% endfor %}
+							                        </tbody>
+							                        {# end table body #}
+							                      </table>
+
+							                    </div>
+											{% endif %}
+						                    
+										</div>
+									</div>
+				              		{# Formations Disponibles #}
+					                <div class="x_panel">
+					                  <div class="x_title">
+					                    <h2 class="h5 font-weight-bold"> Formations Disponibles </h2>
+					                    <ul class="nav navbar-right panel_toolbox">
+					                      {% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+					                      	<li>
+					                      	<a class="link color-default1" href="#" data-toggle="modal" data-target="#addDisponibiliteFormateurModal"><i class="fas fa-plus fa-lg" aria-hidden="true"></i></a>
+					                        </li>
+					                      {% endif %}
+					                      
+					                      <li>
+					                        <a class="collapse-link"><i class="fa fa-chevron-down"></i></a>
+					                      </li>
+					                    </ul>
+					                    <div class="clearfix"></div>
+					                  </div>
+
+					                  <div class="x_content" style="display: none;">
+
+					                    <div class="table-responsive">
+
+					                      <table class="table table-striped jambo_table bulk_action">
+					                        {# start table head #}
+					                        <thead>
+					                          <tr class="headings">
+					                          <th class="column-title">Formation </th>
+					                          <th class="column-title">Cout/jour </th>
+					                          {% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+					                          	<th class="column-title no-link last text-center"><span class="nobr">Supprimer</span>
+					                          {% endif %}
+					                          
+					                          </th>
+					                          </tr>
+					                        </thead>
+					                        {# end table head #}
+					                        {# start table body #}
+					                        <tbody>
+					                        {% for disponibilite in formateur.disponibilites %}
+					                        	<tr class="even pointer">                         
+						                            <td class=" "> {{disponibilite.formation}} </td>
+						                            <td class="a-right a-right "> {{disponibilite.coutJour}} <i class="fas fa-euro-sign"></i></td>
+						                            {% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+						                            	<td class="text-center"><a href="/formateur-profile/delete/formation/{{disponibilite.id}}"><i class="fas fa-trash-alt color-default1"></i></a></td>
+						                            {% endif %}
+						                            
+					                          	</tr>
+					                        {% endfor %}
+					                        </tbody>
+					                        {# end table body #}
+					                      </table>
+
+					                    </div>
+
+
+					                  </div>
+					                </div>
+				              	</div>
+				                <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+				                <!-- start projects worked on -->
+					                <div class="x_panel">
+					                  <div class="x_title">
+					                    <h2> Projets travaillés </h2>
+					                    <ul class="nav navbar-right panel_toolbox">
+					                      <li>
+					                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+					                      </li>                    </ul>
+
+					                    <div class="clearfix"></div>
+					                  </div>
+
+					                  <div class="x_content">
+
+					                    <div class="table-responsive">
+
+					                      <table class="table table-striped jambo_table bulk_action">
+					                        {# start table head #}
+					                        <thead>
+					                          <tr class="headings">
+						                          <th class="column-title">Societé </th>
+						                          <th class="column-title">Formation </th>
+						                          <th class="column-title">Date de la session </th>
+						                          <th class="column-title">Departement</th>
+						                          <th class="column-title">Nombre de jour</th>
+						                          <th class="column-title no-link last"><span class="nobr">Status</span>
+						                          </th>
+					                          </tr>
+					                        </thead>
+					                        {# end table head #}
+					                        {# start table body #}
+					                        <tbody>
+					                        	{% for reservation in formateur.reservations %}
+					                        		<tr class="even pointer">                         
+							                            <td class=" "> {{reservation.societe.raisonSocial}} </td>
+							                            <td class=" "> {{reservation.formation}} </td>
+							                            <td class=" "> {{reservation.dateReservation}} </td>
+							                            <td class=" "> {{reservation.departement}} </td>
+							                            <td class=" "> {{reservation.nbrJour}} </td>
+							                            {% if reservation.status == 0 %}
+							                            	<td class="text-info"> en-cours </td>
+							                            {% else %}
+							                            	<td class="text-success"> Terminer</td>
+							                            {% endif %}
+						                            </tr>
+					                        	{% endfor %}
+					                          
+					                        </tbody>
+					                        {# end table body #}
+					                      </table>
+					                    </div>
+					                  </div>
+					                </div>
+				                <!-- end projects worked on -->
+				                </div>
+				            </div>
+			        	</div>
+			    	</div>
+			    </div>
+			</div>
+	                      {# ------------------------------------------------------------------------------------------ #}	
+	        {% if app.session.get('formateur') is defined and app.session.get('formateur') is not empty %}
+	        <!-- Edit Date Disponibilite Formateur Model -->
+
+			<div class="modal fade"  id="editDateDisponibiliteFormateurModal" tabindex="-1" role="dialog" aria-labelledby="editDqteDisponibiliteFormateurModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default1-bg border-bottom border-warning text-center text-white">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="editDateDisponibiliteFormateurModalLabel">Date Disponibilité</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+
+			        
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorDateDisponibiliteFormateur" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8 text-center"><h5><span class="font-weight-bold">Editer</span> votre Date de Disponibilité</h5></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	{{ form_start(formDateDisp, { 'attr': {'class': 'needs-validation', 'onsubmit': 'return validateDateDisponibiliteFormateur()', 'novalidate': true, 'autocomplete': 'off'}}) }}
+			                   
+										<div class="form-group mb-3 w-75" style="display:grid;">
+											<label>Date de <span class="font-weight-bold">Non</span> Disponibilité </label>
+											<div class="col-md-12 xdisplay_inputx form-group row has-feedback">
+					                          <input type="text" id="search-date1" name="dateDisponibilite"  value="" class="form-control has-feedback-left d-flex" placeholder="{{formateur.dateDisponibilite}}" readonly="readonly">
+					                          <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true">
+					                            <i class="far fa-calendar-times color-default1"></i>
+					                          </span>
+					                        </div>
+										</div>
+										
+										<div class="form-group mb-3 text-center">
+											{{ form_row(formDateDisp.save, { 'attr': {'class': 'btn btn-outline-default btn-md', 'value': ''}}) }}
+											{# <button class="btn btn-outline-default btn-md" type="button">Ajouter l'Experience</button> #}
+										</div>
+									  
+									
+									{{ form_end(formDateDisp) }}
+			                    </div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Model -->
+
+			<!-- Edit Frais Annexes Formateur Model -->
+
+			<div class="modal fade"  id="editFraisFormateurModal" tabindex="-1" role="dialog" aria-labelledby="editFraisFormateurModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default1-bg border-bottom border-warning text-center text-white">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="editFraisFormateurModalLabel">Frais Annexes</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+
+			        
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorFraisFormateur" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8 text-center"><h5><span class="font-weight-bold">Ajuster</span> vos Frais Annexes</h5></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	{{ form_start(formFrais, { 'attr': {'class': 'needs-validation', 'onsubmit': 'return validateFraisFormateur()', 'novalidate': true}}) }}
+
+										<div class="form-group mb-3 w-75" style="display:grid;">
+											<label>Frais Repas <span class="font-weight-bold">(*)</span></label>
+											<div class="col-md-12 xdisplay_inputx form-group row has-feedback">
+					                          <input type="number" name="fraisRepas" id="fraisRepas" value="{{formateur.fraisRepas|default(0)}}" min="0" class="form-control has-feedback-left" >
+					                          <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true">
+					                            <i class="fas fa-euro-sign color-default1"></i>
+					                          </span>
+					                        </div>
+										</div>
+										<div class="form-group mb-3 w-75" style="display:grid;">
+											<label>Frais Hotel <span class="font-weight-bold">(*)</span></label>
+											<div class="col-md-12 xdisplay_inputx form-group row has-feedback">
+					                          <input type="number" name="fraisHotel" id="fraisHotel" value="{{formateur.fraisHotel|default(0)}}" min="0" class="form-control has-feedback-left" >
+					                          <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true">
+					                            <i class="fas fa-euro-sign color-default1"></i>
+					                          </span>
+					                        </div>
+										</div>
+										<div class="form-group mb-3 w-75" style="display:grid;">
+											<label>Frais Déplacement <span class="font-weight-bold">(*)</span></label>
+											<div class="col-md-12 xdisplay_inputx form-group row has-feedback">
+					                          <input type="number" name="fraisDeplacement" id="fraisDeplacement" value="{{formateur.fraisDeplacement|default(0)}}" min="0" class="form-control has-feedback-left" >
+					                          <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true">
+					                            <i class="fas fa-euro-sign color-default1"></i>
+					                          </span>
+					                        </div>
+										</div>
+										<div class="form-group mb-3 text-center">
+											{{ form_row(formFrais.save, { 'attr': {'class': 'btn btn-outline-default btn-md', 'value': ''}}) }}
+										</div>
+									  
+									
+									{{ form_end(formFrais) }}
+			                    </div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			<!-- END Model -->
+
+			<!-- Edit Departement Formateur Model -->
+
+			<div class="modal fade"  id="ediDepartementFormateurModal" tabindex="-1" role="dialog" aria-labelledby="editDepartementFormateurModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default1-bg border-bottom border-warning text-center text-white">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="editDepartementFormateurModalLabel">Departement de Disponibilité</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorDepartementFormateur" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8 text-center"><h5><span class="font-weight-bold">Ajuster</span> vos Departements</h5></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	{{ form_start(formDepart, { 'attr': {'class': 'needs-validation', 'onsubmit': 'return validateDepartementFormateur()', 'novalidate': true}}) }}
+			                   
+										<div class="form-group mb-3 w-100" style="display:grid;">
+											<label>Departement de disponibilité <span class="font-weight-bold">(*)</span></label>
+											<div class="col-md-12 xdisplay_inputx form-group row has-feedback">
+									            <select multiple data-style="bg-white rounded-pill px-4 py-3 shadow-sm" class="selectpicker w-75" name="" style="width: calc(100% - 240px);">
+									            	<option value="tous" disabled hidden>Tous les départements</option>
+									            	<option value="all" selected>Tous les départements</option>
+									                {% for dep in dbDepartement %}
+									                	<option value="{{dep.id}}">{{dep.numero}}/{{dep.nom}} - {{dep.region}}</option>
+									                {% endfor %}
+									               
+									            </select>
+					                        </div>
+										</div>
+										<input type="hidden" name="departement" id="departement" value="{{formateur.departementDisponibilite}}">
+										<div class="form-group mb-3 text-center">
+											{{ form_row(formDepart.save, { 'attr': {'class': 'btn btn-outline-default btn-md', 'value': ''}}) }}
+										</div>
+									  
+									
+									{{ form_end(formDepart) }}
+			                    </div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Connexion Formateur -->
+
+			<!-- ADD Disponibilite Formateur Model -->
+
+			<div class="modal fade"  id="addDisponibiliteFormateurModal" tabindex="-1" role="dialog" aria-labelledby="addDisponibiliteFormateurModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default1-bg border-bottom border-warning text-center text-white">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="addDisponibiliteFormateurModalLabel">Formation Disponibles</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+
+			        
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorAddDisponibiliteFormateur" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8 text-center"><h5><span class="font-weight-bold">Ajouter</span> une formation</h5></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	{{ form_start(formFrm, { 'attr': {'class': 'needs-validation', 'onsubmit': '', 'novalidate': true}}) }}
+			                   
+			                    		
+										<div class="form-group mb-3 w-100">
+											<label>Formation <span class="font-weight-bold">(*)</span></label>
+											<select class="form-control" id="exampleFormControlSelect1" name="formationDisponible">
+										      {% for domain in domains %}
+										      	{% if domain.type == "d" %}
+										      		<option class="font-weight-bold" value="{{domain.nom}}">{{domain.nom}}</option>
+										      	{% else %}
+										      		<option value="{{domain.nom}}">{{domain.nom}}</option>
+										      	{% endif %}
+										      	
+										      {% endfor %}
+										    </select>
+										</div>
+										<div class="form-group mb-3 w-75" style="display:grid;">
+											<label>Cout / Jour <span class="font-weight-bold">(*)</span></label>
+											<div class="col-md-12 xdisplay_inputx form-group row has-feedback">
+					                          <input type="number" name="cout" id="cout" min="0" class="form-control has-feedback-left" value="0">
+					                          <span class="fa fa-calendar-o form-control-feedback left" aria-hidden="true">
+					                            <i class="fas fa-euro-sign color-default1"></i>
+					                          </span>
+					                        </div>
+										</div>
+
+										<div class="form-group mb-3 text-center">
+											{{ form_row(formFrm.save, { 'attr': {'class': 'btn btn-outline-default btn-md', 'value': ''}}) }}
+											{# <button class="btn btn-outline-default btn-md" type="button">Ajouter l'Experience</button> #}
+										</div>
+									  
+									
+									{{ form_end(formFrm) }}
+			                    </div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Add Disponibilite Formateur -->
+	        {% endif %}
+	        
+	       {% endif %}
+	      </div>
+	    </div>
+	  </div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+   
+    <script type="text/javascript">
+    	$(document).ready(function() {
+			{% if app.session.get('formateur') is defined and formateur.activeAdmin == 0 %}
+		    $("body").overhang({
+			  custom: true,
+			  textColor: "#FCE4EC",
+			  primary: "#840121",
+			  accent: "#ffc107",
+			  message: "Votre compte n'est pas encore activé par l'administrateur, veuillez entrer toutes vos informations requises",
+			  closeConfirm: true
+			});
+			{% endif %}	
+			{% if app.session.get('formateur') is defined %}
+				{% for notif in formateur.notifications %}
+					{% if notif.vue == 0 and notif.name == 'reservation' %}
+						$("body").overhang({
+						  type: "success",
+						  message: '{{notif.message}}',
+						  closeConfirm: true
+						});
+					{% endif %}
+				{% endfor %}
+				
+			{% endif %}
+			{% if app.session.get('formateur') is defined %}
+				{% for notif in formateur.notifications %}
+					{% if notif.vue == 0 and notif.name == 'admin' %}
+						$("body").overhang({
+						  custom: true,
+						  textColor: "#840121",
+						  primary: "#e3f2fd",
+						  accent: "#ffc107",
+						  message: '{{notif.message}}',
+						  closeConfirm: true
+						});
+					{% endif %}
+				{% endfor %}
+				
+			{% endif %}
+			{% if app.session.get('formateur') is defined %}
+				{% for notif in formateur.notifications %}
+					{% if notif.vue == 0 and notif.name == 'validation' %}
+						$("body").overhang({
+						  type: "success",
+						  message: '{{notif.message}}',
+						  closeConfirm: true
+						});
+					{% endif %}
+				{% endfor %}
+				
+			{% endif %}
+		});
+		
+	</script>
+{% endblock %}

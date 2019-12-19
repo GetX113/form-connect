@@ -1,0 +1,302 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+	<!-- Page top section -->
+	<section class="page-top-section set-bg" data-setbg="/img/bg.jpg" style="filter: contrast(0.8);">
+		<div class="container text-dark">
+			<h3>Profile</h3>
+		</div>
+	</section>
+	<!--  Page top end -->
+
+	<!-- Search section -->
+	<section class="multi-search-section">
+		<div class="msf-warp border border-warning">
+			<div class="container-fluid">
+				
+				<div class="container-fluid">
+					<div class="row"><h5>Cherchez votre formation</h5></div>						
+					<form class="" action="recherche-formateur" method="POST" autocomplete="off">
+						<div class="container-fluid">
+							<div class="row">
+								  <div class="form-group col">
+								    <select name="search-formation" id="search-formation" class="custom-select">
+											{% for domain in domains %}
+										      	{% if domain.type == "d" %}
+										      		<option class="font-weight-bold" value="{{domain.nom}}">{{domain.nom}}</option>
+										      	{% else %}
+										      		<option value="{{domain.nom}}">{{domain.nom}}</option>
+										      	{% endif %}
+										      	
+										      {% endfor %}
+				                    </select>
+								  </div>
+								  <div class="form-group col">
+								    <select name="search-departement" id="search-departement" class="custom-select ">
+											<option value="all" selected>Tous les départements</option>
+							                {% for dep in departements %}
+							                	<option value="{{dep.numero}}/{{dep.nom}} - {{dep.region}}">{{dep.numero}}/{{dep.nom}} - {{dep.region}}</option>
+							                {% endfor %}
+				                    </select>
+								  </div>
+								  <div class="form-group col">
+								    <input id="search-date2" type="text" class="form-control" name="search-date" placeholder="Disponibilité" />
+								  </div>
+								  <div class="form-group col">
+								    <button type="submit" class="form-control btn btn-outline-default1" id="chercher">Chercher <i class="fa fa-angle-right"></i></button>
+								  </div>
+						  	</div>
+						</div>
+					</form>
+				</div>				
+			</div>
+		</div>
+	</section>
+	<!-- Search section end -->
+
+	<div class="row">
+	  <div class="col-md-12 col-sm-12 ">
+	    <div class="x_panel">
+	      <div class="x_content">
+	      	{# ---------------------------------------------------------------------------------------------------------------- #}
+	        <div class="col-md-3 col-sm-3  profile_left">
+	          <div class="profile_img">
+	            <div id="crop-avatar">
+	              <!-- Current avatar -->
+	              <img class="img-thumbnail" src="{{organisme.logo}}" alt="Logo de Societe" title="Change the avatar">
+	            </div>
+	          </div>
+	          <h3>{{organisme.raisonSocial}}</h3>
+	          <ul class="list-unstyled user_data">
+	            <li class=" text-monospace font-weight-lighter font-italic"><i class="fas fa-history color-default1"></i> <small>{{organisme.lastLogin|date('Y-m-d\\ H:i:s P')}}</small>  
+	            </li>
+	            <li class="text-monospace font-weight-normal"><i class="fas fa-id-badge color-default1"></i> {{organisme.nom}} {{organisme.prenom}}
+	            </li>
+	            <li class="text-monospace font-weight-normal"><i class="fa fa-map-marker user-profile-icon color-default1"></i> {{organisme.adresse1}}, {{organisme.ville}}, FR
+	            </li>
+	            <li class="text-monospace font-weight-normal">
+	            <i class="fa fa-briefcase user-profile-icon color-default1"></i> Organisme
+	            </li>
+
+	          </ul>
+
+	          <button class="btn btn-outline-default" data-toggle="modal" data-target="#editProfileOrganismeModal"><i class="fa fa-edit m-right-xs"></i>Editer le profil</button>
+	          <br>
+	        </div>
+	        {# ------------------------------------------------------------------------------------------------------------- #}
+
+	         <!-- Edit Profile Organisme Model -->
+
+			<div class="modal fade"  id="editProfileOrganismeModal" tabindex="-1" role="dialog" aria-labelledby="editProfileOrganismeModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default1-bg border-bottom border-warning text-center text-white">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="editProfileOrganismeModalLabel">Editer le profil</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+
+			        
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorProfileOrganisme" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8 text-center"><img class="img-thumbnail" src="{{organisme.logo}}" alt="Photo de Profile" title="Change the avatar"><br> <h5><span class="font-weight-bold">Editer</span> mes informations personnelles</h5></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	{{ form_start(form, { 'attr': {'class': 'needs-validation', 'onsubmit': 'return validateProfileOrganisme()', 'novalidate': true}}) }}
+			                   
+			                    		<div class="form-group mb-3 w-100">
+											<label>Votre Logo de la Societé</label>
+											{{ form_row(form.logo, { 'attr': { 'class': 'form-control-file', 'id': 'photo', 'value': organisme.logo}}) }}
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre nom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="nomProfileOrganisme" name="nom" placeholder="Veuillez saisir votre nom" value="{{organisme.nom}}" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre prenom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="prenomProfileOrganisme" name="prenom" placeholder="Veuillez saisir votre prenom" value="{{organisme.prenom}}" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre nom d'entreprise <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="raisonSocialProfileOrganisme" name="raisonSocial" placeholder="Veuillez saisir votre prenom" value="{{organisme.raisonSocial}}" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre adresse de d'entreprise <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="adresseProfileOrganisme" name="adresse" placeholder="Veuillez saisir votre adresse" value="{{organisme.adresse1}}" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre complément d'adresse </label>
+											<input class="form-control" id="adresse2lInscriptionOrganisme" name="adresse2" placeholder="Veuillez saisir votre complément d'adresse (Bâtiment, résidence, ...)" value="{{organisme.adresse2}}">
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre code postal <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="codePostalProfileOrganisme" name="codePostal" placeholder="Veuillez saisir votre code postal" value="{{organisme.codePostal}}" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre ville <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="villeProfileOrganisme" name="ville" placeholder="Veuillez saisir votre ville" value="{{organisme.ville}}" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre téléphone fix <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="tel" id="fixProfileOrganisme" name="fix" placeholder="Veuillez saisir votre téléphone fix" value="{{organisme.fix}}">
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre téléphone mobile</label>
+											<input class="form-control" type="tel" id="mobileProfileOrganisme" name="mobile" placeholder="Veuillez saisir votre téléphone mobile" value="{{organisme.mobile}}" required>
+										</div>
+
+										<div class="form-group mb-3 text-center">
+											<button class="btn btn-outline-default btn-md" type="submit">Modifier mes informations</button>
+										</div>
+									  
+									
+									{{ form_end(form) }}
+			                    </div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Profile Organisme -->
+
+	        
+	        {% if organisme.activeAdmin == 1 %}
+	        {# -------------------------------------------------------------------------------------------- #}
+
+	        <div class="col-md-9 col-sm-9  float-right ">
+	          <!-- start projects worked on -->
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2> Projets travaillés </h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>                    </ul>
+
+                    <div class="clearfix"></div>
+                  </div>
+
+                  <div class="x_content">
+
+                    <div class="table-responsive">
+
+                      <table class="table table-striped jambo_table bulk_action">
+                        {# start table head #}
+                        <thead>
+                          <tr class="headings">
+	                          <th class="column-title">Formateur </th>
+	                          <th class="column-title">Formation </th>
+	                          <th class="column-title">Date de la session </th>
+	                          <th class="column-title">Departement</th>
+	                          <th class="column-title">Nombre de jour</th>
+	                          <th class="column-title no-link last"><span class="nobr">Status</span>
+	                          </th>
+	                          <th class="column-title">Validation / Avis</th>
+                          </tr>
+                        </thead>
+                        {# end table head #}
+                        {# start table body #}
+                        <tbody>
+                        	{% for reservation in organisme.reservations %}
+                        		<tr class="even pointer">                         
+		                            <td class=" "> {{reservation.formateur.nom}} {{reservation.formateur.prenom}} </td>
+		                            <td class=" "> {{reservation.formation}} </td>
+		                            <td class=" "> {{reservation.dateReservation}} </td>
+		                            <td class=" "> {{reservation.departement}} </td>
+		                            <td class=" "> {{reservation.nbrJour}} </td>
+		                            {% if reservation.status == 0 %}
+		                            	<td class="text-info"> en-cours </td>
+		                            {% else %}
+		                            	<td class="text-success"> Terminer</td>
+		                            {% endif %}
+		                            {% if reservation.status == 0 %}
+		                            	<td class=""> <a href="/valider-reservation/{{reservation.id}}" class="btn btn-success btn-sm">valider</a> </td>
+		                            {% else %}
+		                            	<td class=""> <a class="btn btn-info btn-sm">avis</a> </td>
+		                            {% endif %}
+	                            </tr>
+                        	{% endfor %}
+                          
+                        </tbody>
+                        {# end table body #}
+                      </table>
+                    </div>
+                  </div>
+                </div>
+	        </div>
+	                      {# ------------------------------------------------------------------------------------------ #}	
+	       {% endif %}
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+   
+    <script type="text/javascript">
+    	$(document).ready(function() {
+			{% if organisme.activeAdmin == 0 %}
+		    $("body").overhang({
+			  custom: true,
+			  textColor: "#FCE4EC",
+			  primary: "#840121",
+			  accent: "#ffc107",
+			  message: "Votre compte n'est pas encore activé par l'administrateur, veuillez entrer toutes vos informations requises",
+			  closeConfirm: true
+			});
+			{% endif %}	
+			{% if app.session.get('organisme') is defined %}
+				{% for notif in organisme.notifications %}
+					{% if notif.vue == 0 and notif.name == 'admin' %}
+						$("body").overhang({
+						  custom: true,
+						  textColor: "#840121",
+						  primary: "#e3f2fd",
+						  accent: "#ffc107",
+						  message: '{{notif.message}}',
+						  closeConfirm: true
+						});
+					{% endif %}
+				{% endfor %}
+				
+			{% endif %}
+		});
+		
+	</script>
+{% endblock %}

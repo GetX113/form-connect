@@ -1,0 +1,208 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+
+
+	<!-- Hero section -->
+	<section class="hero-section set-bg" data-setbg="img/bg.jpg" style="filter: contrast(0.8);">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-7">
+					<div class="hero-text text-dark">
+					<h2>Formations</h2>
+			   		<p>Vous êtes un organisme de formation et vous cherchez des formateurs intervenants pour se changer de vos formations ?
+	                  Vous êtes un formateur intervenant et vous cherchez des missions de formation ?
+	                  Ce site vous offre la possibilité de trouver ce que vous cherchez </p>					
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Hero section end -->
+
+
+	<!-- Search section -->
+	<section class="multi-search-section">
+		<div class="msf-warp border border-warning">
+			<div class="container-fluid">
+				
+				<div class="container-fluid">
+					<div class="row"><h5>Cherchez votre formation</h5></div>						
+					<form class="" action="recherche-formateur" method="POST" autocomplete="off">
+						<div class="container-fluid">
+							<div class="row">
+								  <div class="form-group col">
+								    <select name="search-formation" id="search-formation" class="custom-select">
+											{% for domain in domains %}
+										      	{% if domain.type == "d" %}
+										      		<option class="font-weight-bold" value="{{domain.nom}}">{{domain.nom}}</option>
+										      	{% else %}
+										      		<option value="{{domain.nom}}">{{domain.nom}}</option>
+										      	{% endif %}
+										      	
+										      {% endfor %}
+				                    </select>
+								  </div>
+								  <div class="form-group col">
+								    <select name="search-departement" id="search-departement" class="custom-select ">
+							                {% for dep in departements %}
+							                	<option value="{{dep.numero}}/{{dep.nom}} - {{dep.region}}">{{dep.numero}}/{{dep.nom}} - {{dep.region}}</option>
+							                {% endfor %}
+				                    </select>
+								  </div>
+								  <div class="form-group col">
+								    <input id="search-date2" type="text" class="form-control" name="search-date" placeholder="Disponibilité" />
+								  </div>
+								  <div class="form-group col">
+								    <button type="submit" class="form-control btn btn-outline-default1" id="chercher">Chercher <i class="fa fa-angle-right"></i></button>
+								  </div>
+						  	</div>
+						</div>
+					</form>
+				</div>				
+			</div>
+		</div>
+	</section>
+	<!-- Search section end -->
+
+	<!-- Formations section  -->
+	<section class="courses-section spad">
+		<div class="container">
+			<div class="sec-title text-center">
+				<h2>Nos Formations</h2>
+			</div>
+			<div class="course-slider owl-carousel">
+				<!-- formation -->
+				<div class="course-item">
+					
+					<div class="course-content">
+						<div class="cc-text">
+							<h5>Le CHSCT et le management de la sécurité au travail</h5>
+							<p>azerty azerty azerty azertyazerty azertyazerty azertyazerty azertyazerty azerty
+							azerty azertyazerty azertyazerty azerty </p>
+							<!-- men be3d  -->
+							<div class="rating">
+							</div>
+						</div>
+						<div class="seller-info">
+							<div class="seller-pic set-bg" data-setbg="#"></div>
+							<h6> Formation, <span>professeur</span></h6>
+						</div>
+					</div>
+				</div>
+				<!-- formation -->
+				<div class="course-item">
+					
+					<div class="course-content">
+						<div class="cc-text">
+							<h5>Le CHSCT et le management de la sécurité au travail</h5>
+							<p>azerty azerty azerty azertyazerty azertyazerty azertyazerty azertyazerty azerty
+							azerty azertyazerty azertyazerty azerty </p>
+							<!-- men be3d  -->
+							<div class="rating">
+							</div>
+						</div>
+						<div class="seller-info">
+							<div class="seller-pic set-bg" data-setbg="#"></div>
+							<h6> Formation, <span>professeur</span></h6>
+						</div>
+					</div>
+				</div>
+				<!-- formation -->
+				<div class="course-item">
+					
+					<div class="course-content">
+						<div class="cc-text">
+							<h5>Le CHSCT et le management de la sécurité au travail</h5>
+							<p>azerty azerty azerty azertyazerty azertyazerty azertyazerty azertyazerty azerty
+							azerty azertyazerty azertyazerty azerty </p>
+							<!-- men be3d  -->
+							<div class="rating">
+							</div>
+						</div>
+						<div class="seller-info">
+							<div class="seller-pic set-bg" data-setbg="#"></div>
+							<h6> Formation, <span>professeur</span></h6>
+						</div>
+					</div>
+				</div>
+				<!-- formation -->
+				<div class="course-item">
+					
+					<div class="course-content">
+						<div class="cc-text">
+							<h5>Le CHSCT et le management de la sécurité au travail</h5>
+							<p>azerty azerty azerty azertyazerty azertyazerty azertyazerty azertyazerty azerty
+							azerty azertyazerty azertyazerty azerty </p>
+							<!-- men be3d  -->
+							<div class="rating">
+							</div>
+						</div>
+						<div class="seller-info">
+							<div class="seller-pic set-bg" data-setbg="#"></div>
+							<h6> Formation, <span>professeur</span></h6>
+						</div>
+					</div>
+				</div>
+				<!-- formation -->
+				<div class="course-item">
+					
+					<div class="course-content">
+						<div class="cc-text">
+							<h5>Le CHSCT et le management de la sécurité au travail</h5>
+							<p>azerty azerty azerty azertyazerty azertyazerty azertyazerty azertyazerty azerty
+							azerty azertyazerty azertyazerty azerty </p>
+							<!-- men be3d  -->
+							<div class="rating">
+							</div>
+						</div>
+						<div class="seller-info">
+							<div class="seller-pic set-bg" data-setbg="#"></div>
+							<h6> Formation, <span>professeur</span></h6>
+						</div>
+					</div>
+				</div>
+				<!-- formation -->
+				<div class="course-item">
+					
+					<div class="course-content">
+						<div class="cc-text">
+							<h5>Le CHSCT et le management de la sécurité au travail</h5>
+							<p>azerty azerty azerty azertyazerty azertyazerty azertyazerty azertyazerty azerty
+							azerty azertyazerty azertyazerty azerty </p>
+							<!-- men be3d  -->
+							<div class="rating">
+							</div>
+						</div>
+						<div class="seller-info">
+							<div class="seller-pic set-bg" data-setbg="#"></div>
+							<h6> Formation, <span>professeur</span></h6>
+						</div>
+					</div>
+				</div>
+				<!-- formation -->
+				<div class="course-item">
+					
+					<div class="course-content">
+						<div class="cc-text">
+							<h5>Le CHSCT et le management de la sécurité au travail</h5>
+							<p>azerty azerty azerty azertyazerty azertyazerty azertyazerty azertyazerty azerty
+							azerty azertyazerty azertyazerty azerty </p>
+							<!-- men be3d  -->
+							<div class="rating">
+							</div>
+						</div>
+						<div class="seller-info">
+							<div class="seller-pic set-bg" data-setbg="#"></div>
+							<h6> Formation, <span>professeur</span></h6>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- Formations section end -->
+{% endblock %}

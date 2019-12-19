@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}{% endblock %}</title>
+        {% block stylesheets %}
+        	<meta charset="UTF-8">
+			<meta name="la description" content="form@connect">
+			<meta name="mots clés" content="form@connect, html">
+			<meta name="fenêtre d'affichage" content="width=device-width, initial-scale=1.0">
+			<link rel="icon" href="img/logo.png" type="image/icon type">
+			<!-- Google Fonts -->
+			<link href="https://fonts.googleapis.com/css?family=Raleway:400,400i,500,500i,600,600i,700,700i,800" rel="stylesheet">
+			
+            <link href="{{asset('/build/css/custom.min.css')}}" rel="stylesheet">
+			<!-- Stylesheets -->
+			<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/pepper-grinder/jquery-ui.css">
+			<link rel="stylesheet" href="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.css">
+			<link rel="stylesheet" href="{{asset('/css/bootstrap.min.css')}}"/>
+			<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+			<link rel="stylesheet" href="{{asset('/dist/overhang.min.css')}}"/>
+			<link rel="stylesheet" href="{{asset('/css/flaticon.css"')}}"/>
+			<link rel="stylesheet" href="{{asset('/css/owl.carousel.css')}}"/>
+			<link rel="stylesheet" href="{{asset('/css/style.css')}}"/>
+			<!-- NProgress -->
+		    {# <link href="{{asset('vendors/nprogress/nprogress.css')}}" rel="stylesheet"> #}
+		    <!-- Animate.css -->
+		    <link href="{{asset('/vendors/animate.css/animate.min.css')}}" rel="stylesheet">
+
+		    <!-- Custom Theme Style -->
+        {% endblock %}
+    </head>
+    <body>
+    	{% block headers %}
+    		<!-- Page Preloder -->
+			<div id="preloder">
+				<div class="loader"></div>
+			</div>
+			
+
+			<!-- Header section -->
+			<header class="header-section">
+				<nav class="navbar navbar-expand-lg navbar-light fixed-top border-bottom border-warning default-bg">
+				  <a class="navbar-brand" href="#"><img src="/img/logo.png" alt="" width="50%"></a>
+				  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				    <span class="navbar-toggler-icon"></span>
+				  </button>
+
+				  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+				    <ul class="navbar-nav mr-auto">
+				      <li class="nav-item {% if home is defined %}active{% endif %}">
+				        <a class="nav-link" href="{{path('index')}} ">Accueil <span class="sr-only">(current)</span></a>
+				      </li>
+				      {% if app.session.get('formateur') is not empty or app.session.get('organisme') is not empty %}
+				      	<li class="nav-item">
+				        <a class="nav-link {% if profile is defined %}active{% endif %}" href="{% if profile is defined %}#{% else %}{%  if app.session.get('formateur') is not empty %}{{path('formateur-profile')}}{% endif %}{% if app.session.get('organisme') is not empty %}{{path('organisme-profile')}}{% endif %}{% endif %}">Profile</a>
+				      </li>
+				      {% endif %}
+				      <li class="nav-item">
+				        <a class="nav-link" href="#">Formations</a>
+				      </li>
+				      <li class="nav-item">
+				        <a class="nav-link" href="#">À propos de nous</a>
+				      </li>
+				      <li class="nav-item">
+				        <a class="nav-link" href="#">Contact</a>
+				      </li>
+				    </ul>
+				    <form class="form-inline my-2 my-lg-0">
+				    {% if app.session.get('formateur') is not empty or app.session.get('organisme') is not empty %}
+				    	<a href="{{path('logout')}} " class="btn btn-outline-danger my-2 my-sm-0 mr-1" >Déconnecion</a>
+				    {% else %}
+				    	<a href="#" class="btn btn-outline-primary my-2 my-sm-0 mr-1" data-toggle="modal" data-target="#identificationModal">Connexion</a>
+				      	<a href="#" class="btn btn-outline-default my-2 my-sm-0" data-toggle="modal" data-target="#inscriptionModal">Inscription</a>
+				    {% endif %}
+				      
+				    </form>
+				  </div>
+				</nav>
+			</header>
+			<!-- Header section end -->
+
+			
+			<!-- Identification Model -->
+
+			<div class="modal fade" id="identificationModal" tabindex="-1" role="dialog" aria-labelledby="identificationModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content text-center">
+			      <div class="modal-header default-bg border-bottom border-warning text-center">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="identificationModalLabel">Connexion</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h3 class="text-center">Vous êtes ?</h3></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-2"></div>
+			                    <div class="col-md-4">
+			                  	    <button data-toggle="modal" data-target="#connexionOrganismeModal" data-dismiss="modal" class="btn-circle btn-circle-xl m-1"> <img src="/scs.png"> </button><br>
+			                  	    <div class="container-fluid ml-4">
+				                  	  	<div class="row">
+			                  	         	<h5 class="text-primary">Organisme</h5>
+			                  	        </div>
+			                  	    </div>     
+			                    </div>
+			                    <div class="col-md-4">
+			                  	    <button data-toggle="modal" data-target="#connexionFormateurModal" data-dismiss="modal" class="btn-circle btn-circle-xl m-1"> <img src="/frmts.png"> </button><br>
+			                  	    <div class="container-fluid ml-4">
+			                  	    	<div class="row text-md-center">
+			                  	    		<h5 class="text-primary">Formateur</h5>
+				                  	    </div>
+			                  	    </div>
+			                  	    
+			                    </div>
+			                  <div class="col-md-2"></div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			                  <div class="col text-center">
+			                       <button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			                  </div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END PupUp -->
+
+			{% if inscriptionReussite is defined %}
+			<!-- inscription success Model -->
+
+			<div class="modal fade show" id="successModal" style="display: block; padding-right: 14px;" tabindex="-1" role="dialog" aria-labelledby="identificationModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default-bg border-bottom border-warning text-center">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="identificationModalLabel">Dernière étape</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+			        <a href="home/" class="close"><span aria-hidden="true">&times;</span></a>
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="alert alert-success" role="alert">
+							  <h4 class="alert-heading">Félicitations ! Votre nouveau compte a été créé avec succès !</h4><br>
+							  <p>Nous avons envoyé un e-mail avec un lien de confirmation à votre adresse e-mail. Veuillez prévoir 5 à 10 minutes pour que ce message arrive.</p>
+							  <hr>
+							  <p class="mb-0">Si l'e-mail n'apparaît pas dans votre boîte de réception, veuillez vérifier votre spam.</p>
+							</div>
+						</div>
+					  </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			                  <div class="col text-center">
+			                       <a href="home/" class="btn btn btn-dark" data-dismiss="modal">Fermer</a>
+			                  </div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END PupUp -->
+			{% endif %}
+			<!-- Connexion Organisme Model -->
+
+			<div class="modal fade {% if echecConnexionOrganisme is defined %}show{% endif %}{% if echecActivationEmailOrganisme is defined %}show{% endif %}" {% if echecConnexionOrganisme is defined %}style="display: block; padding-right: 14px;"{% endif %}{% if echecActivationEmailOrganisme is defined %}style="display: block; padding-right: 14px;"{% endif %} id="connexionOrganismeModal" tabindex="-1" role="dialog" aria-labelledby="connexionOrganismeModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default-bg border-bottom border-warning text-center">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="connexionOrganismeModalLabel">Connexion</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+			        {% if echecConnexionOrganisme is defined or echecActivationEmailOrganisme is defined %}
+		    			<a href="home/" class="close"><span aria-hidden="true">&times;</span></a>
+		    		{% else %}
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+		    		{% endif %}
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorConnexionOrganisme" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+					  {% if echecConnexionOrganisme is defined %}
+					  	<div class="alert alert-danger text-center d-block" id="loginIncorrect" role="alert">
+							L'adresse e-mail ou le mot de passe que vous avez entré n'est pas valide.
+						</div>
+					  {% endif %}
+					  {% if echecActivationEmailOrganisme is defined %}
+					  	<div class="alert alert-danger text-center d-block" id="loginIncorrect" role="alert">
+							Votre compte n'est pas encore active veuillez consulter votre email.
+						</div>
+					  {% endif %}
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-3"></div>
+			    			<div class="col-md-6 text-center"><img src="/sc.png" width="50%"><br> <h5 class=""><span class="font-weight-bold">Déjà</span> inscrit ?</h5></div>
+			    			<div class="col-md-3"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-2"></div>
+			                    <div class="col-md-8">
+			                    	<form class="needs-validation" action="connexionOrganisme" method="post" onsubmit="return validateFormConnexionOrganisme()" novalidate>
+
+									  <div class="form-group mb-3">
+									    <label for="validationEmail">Votre adresse e-mail</label>
+									    <input class="form-control" type="email" id="emailConnexionOrganisme" placeholder="Merci d'entrer votre email" name="email" required>
+									  </div>
+
+									  <div class="form-group mb-3">
+									    <label for="validationPassword">Votre mot de passe</label>
+									    <input class="form-control" id="passwordConnexionOrganisme" placeholder="Merci d'entrer votre mot de passe" name="password" type="password" required>
+									  </div>
+
+									  <div class="form-group mb-3 text-center">
+									  	<button class="btn btn-outline-default btn-md" type="submit">Connexion</button>
+									  </div>
+									  
+									</form>
+			                    </div>
+			                  <div class="col-md-2"></div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			                  <div class="col text-center">
+			                    {% if echecConnexionOrganisme is defined or echecActivationEmailOrganisme is defined %}
+			                  		<a href="home/" class="btn btn btn-dark" data-dismiss="modal">Fermer</a>
+			                  	{% else %}
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			                  	{% endif %}
+			                  </div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Connexion Organisme -->
+
+			<!-- Connexion Formateur Model -->
+
+			<div class="modal fade {% if echecConnexionFormateur is defined %}show{% endif %}{% if echecActivationEmailFormateur is defined %}show{% endif %}" {% if echecConnexionFormateur is defined %}style="display: block; padding-right: 14px;"{% endif %}{% if echecActivationEmailFormateur is defined %}style="display: block; padding-right: 14px;"{% endif %} id="connexionFormateurModal" tabindex="-1" role="dialog" aria-labelledby="connexionFormateurModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default-bg border-bottom border-warning text-center">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="connexionFormateurModalLabel">Connexion</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+		    		{% if echecConnexionFormateur is defined or echecActivationEmailFormateur is defined %}
+		    			<a href="home/" class="close"><span aria-hidden="true">&times;</span></a>
+		    		{% else %}
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+		    		{% endif %}
+
+			        
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorConnexionFormateur" role="alert">
+						Veuillez renseigner tous les champs valide
+					  </div>
+					  {% if echecConnexionFormateur is defined %}
+					  	<div class="alert alert-danger text-center d-block" id="loginIncorrect" role="alert">
+							L'adresse e-mail ou le mot de passe que vous avez entré n'est pas valide.
+						</div>
+					  {% endif %}
+					  {% if echecActivationEmailFormateur is defined %}
+					  	<div class="alert alert-danger text-center d-block" id="loginIncorrect" role="alert">
+							Votre compte n'est pas encore active veuillez consulter votre email.
+						</div>
+					  {% endif %}
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8 text-center"><img src="/frmt.png" width="50%"><br> <h5><span class="font-weight-bold">Déjà</span> inscrit ?</h5></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-2"></div>
+			                    <div class="col-md-8">
+			                    	<form class="needs-validation" action="connexionFormateur" method="post" onsubmit="return validateFormConnexionFormateur()" novalidate>
+
+									  <div class="form-group mb-3">
+									    <label for="validationEmail">Votre adresse e-mail</label>
+									    <input class="form-control" type="email" id="emailConnexionFormateur" placeholder="Merci d'entrer votre email" name="email" required>
+									  </div>
+
+									  <div class="form-group mb-3">
+									    <label for="validationPassword">Votre mot de passe</label>
+									    <input class="form-control" id="passwordConnexionFormateur" placeholder="Merci d'entrer votre mot de passe" name="password" type="password" required>
+									  </div>
+
+									  <div class="form-group mb-3 text-center">
+									  	<button class="btn btn-outline-default btn-md" type="submit">Connexion</button>
+									  </div>
+									  
+									</form>
+			                    </div>
+			                  <div class="col-md-2"></div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			                  <div class="col text-center">
+			                  	{% if echecConnexionFormateur is defined or echecActivationEmailFormateur is defined %}
+			                  		<a href="home/" class="btn btn btn-dark" data-dismiss="modal">Fermer</a>
+			                  	{% else %}
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			                  	{% endif %}
+			                       
+			                  </div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Connexion Formateur -->
+
+
+			<!-- Inscription Model -->
+
+			<div class="modal fade" id="inscriptionModal" tabindex="-1" role="dialog" aria-labelledby="inscriptionModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default-bg border-bottom border-warning">
+			        <div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center" id="inscriptionModalLabel">Inscription</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h3 class="text-center">Vous êtes ?</h3></div>
+			    			<div class="col-md-2"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-2"></div>
+			                    <div class="col-md-4">
+			                  	    <button data-toggle="modal" type="email" data-target="#inscriptionOrganismeModal" class="btn-circle btn-circle-xl m-1" data-dismiss="modal"> <img src="/scs.png"> </button><br>
+			                  	    <div class="container-fluid ml-4">
+				                  	  	<div class="row">
+			                  	         	<h5 class="text-primary">Organisme</h5>
+			                  	        </div>
+			                  	    </div>     
+			                    </div>
+			                    <div class="col-md-4">
+			                  	    <button data-toggle="modal" data-target="#inscriptionFormateurModal" class="btn-circle btn-circle-xl m-1" data-dismiss="modal"> <img src="/frmts.png"> </button><br>
+			                  	    <div class="container-fluid ml-4">
+			                  	    	<div class="row text-md-center">
+			                  	    		<h5 class="text-primary">Formateur</h5>
+				                  	    </div>
+			                  	    </div>
+			                  	    
+			                    </div>
+			                  <div class="col-md-2"></div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			                  <div class="col text-center">
+			                       <button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			                  </div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- End Inscription Model -->
+
+			<!-- Inscription Organisme Model -->
+
+			<div class="modal fade {% if echecInscriptionOrganisme is defined %}show{% endif %}" {% if echecInscriptionOrganisme is defined %}style="display: block; padding-right: 14px;"{% endif %} id="inscriptionOrganismeModal" tabindex="-1" role="dialog" aria-labelledby="inscriptionOrganismeModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default-bg border-bottom border-warning text-center">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="inscriptionOrganismeModalLabel">Inscription</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+			        {% if echecInscriptionOrganisme is defined %}
+		    			<a href="home/" class="close"><span aria-hidden="true">&times;</span></a>
+		    		{% else %}
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+		    		{% endif %}
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorInscriptionOrganisme" role="alert">
+						Veuillez renseigner tous les champs obligatoires valide
+					  </div>
+					  {% if echecInscriptionOrganisme is defined %}
+					  	<div class="alert alert-danger text-center d-block" id="loginIncorrect" role="alert">
+							L'adresse e-mail que vous avez entrée est déjà attribuée à un autre compte formateur.
+						</div>
+					  {% endif %}
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-3"></div>
+			    			<div class="col-md-6 text-center"><img src="/sc.png" width="50%"><br> <h5 class="text-center"><span class="font-weight-bold">Pas encore</span> inscrit ?</h5></div>
+			    			<div class="col-md-3"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	<form class="needs-validation" action="inscription-organisme" method="POST" onsubmit="return validateFormInscriptionOrganisme()" novalidate>
+			                    		<div class="form-check form-check-inline">
+											<label for="civilite">Civilité :</label>
+										</div>
+			                    		<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" name="civilite" id="Monsieur" value="Monsieur" checked="checked">
+											<label class="form-check-label" for="Monsieur">Monsieur</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" name="civilite" id="Madame" value="Madame">
+											<label class="form-check-label" for="Madame">Madame</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" name="civilite" id="Mademoiselle" value="Mademoiselle">
+											<label class="form-check-label" for="Mademoiselle">Mademoiselle</label>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre nom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="nomInscriptionOrganisme" name="nom" placeholder="Veuillez saisir votre nom" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre prenom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="prenomInscriptionOrganisme" name="prenom" placeholder="Veuillez saisir votre prenom" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre nom d'entreprise <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="raisonSocialInscriptionOrganisme" name="raisonSocial" placeholder="Veuillez saisir votre nom d'entreprise" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre adresse <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="adresseInscriptionOrganisme" name="adresse" placeholder="Veuillez saisir votre adresse" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre complément d'adresse </label>
+											<input class="form-control" id="adresse2lInscriptionOrganisme" name="adresse2" placeholder="Veuillez saisir votre complément d'adresse (Bâtiment, résidence, ...)">
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre code postal <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="codePostalInscriptionOrganisme" name="codePostal" placeholder="Veuillez saisir votre code postal" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre ville <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="villeInscriptionOrganisme" name="ville" placeholder="Veuillez saisir votre ville" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre téléphone fix <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="tel" id="fixInscriptionOrganisme" name="fix" placeholder="Veuillez saisir votre téléphone fix" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre téléphone mobile</label>
+											<input class="form-control" type="tel" id="mobileInscriptionOrganisme" name="mobile" placeholder="Veuillez saisir votre téléphone mobile">
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre adresse e-mail <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="email" id="emailInscriptionOrganisme" name="email" placeholder="Veuillez saisir votre adresse e-mail" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre mot de passe <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="password" id="passwordInscriptionOrganisme" value="" name="password" placeholder="Veuillez saisir votre mot de passe" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Confirmer votre mot de passe <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="password" id="password2InscriptionOrganisme" name="password2" placeholder="Veuillez confirmer votre mot de passe" required>
+										</div>
+
+										<div class="form-group mb-3 text-center">
+											<button class="btn btn-outline-default btn-md" type="submit">Créer mon compte</button>
+										</div>
+									  
+									</form>
+			                    </div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			              		{% if echecInscriptionOrganisme is defined %}
+			                  		<a href="home/" class="btn btn btn-dark" data-dismiss="modal">Fermer</a>
+			                  	{% else %}
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			                  	{% endif %}
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Inscription Organisme -->
+
+			<!-- Inscription Formateur Model -->
+
+			<div class="modal fade {% if echecInscriptionFormateur is defined %}show{% endif %}" {% if echecInscriptionFormateur is defined %}style="display: block; padding-right: 14px;"{% endif %} id="inscriptionFormateurModal" tabindex="-1" role="dialog" aria-labelledby="inscriptionFormateurModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header default-bg border-bottom border-warning text-center">
+		    		<div class="container-fluid">
+		    			<div class="row">
+			    			<div class="col-md-2"></div>
+			    			<div class="col-md-8"> <h5 class="modal-title text-center ml-3" id="inscriptionFormateurModalLabel">Inscription</h5></div>
+			    			<div class="col-md-2"></div>
+		    			</div>
+		    		</div>
+			        {% if echecInscriptionFormateur is defined %}
+		    			<a href="home/" class="close"><span aria-hidden="true">&times;</span></a>
+		    		{% else %}
+		    			<button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+		    		{% endif %}
+			      </div>
+			      <div class="modal-body">
+			      	  <div class="alert alert-danger text-center" id="errorInscriptionFormateur" role="alert">
+						Veuillez renseigner tous les champs obligatoires valide
+					  </div>
+					  {% if echecInscriptionFormateur is defined %}
+					  	<div class="alert alert-danger text-center d-block" id="loginIncorrect" role="alert">
+							L'adresse e-mail que vous avez entrée est déjà attribuée à un autre compte formateur.
+						</div>
+					  {% endif %}
+			      	  <div class="container-fluid">
+						<div class="row">
+			    			<div class="col-md-3"></div>
+			    			<div class="col-md-6 text-center"><img src="/frmt.png" width="50%"><br> <h5 class="text-center"><span class="font-weight-bold">Pas encore</span> inscrit ?</h5></div>
+			    			<div class="col-md-3"></div>
+						</div>
+					  </div>
+			      	  <div class="container-fluid mt-5">
+			              <div class="row">
+			              	    <div class="col-md-0"></div>
+			                    <div class="col-md-12">
+			                    	<form class="needs-validation" onsubmit="return validateFormInscriptionFormateur()" action="inscription-formateur" method="POST" novalidate>
+			                    		<div class="form-check form-check-inline">
+											<label for="civilite">Civilité :</label>
+										</div>
+			                    		<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" name="civilite" id="Monsieur" value="Monsieur" checked="checked">
+											<label class="form-check-label" for="Monsieur">Monsieur</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" name="civilite" id="Madame" value="Madame">
+											<label class="form-check-label" for="Madame">Madame</label>
+										</div>
+										<div class="form-check form-check-inline">
+											<input class="form-check-input" type="radio" name="civilite" id="Mademoiselle" value="Mademoiselle">
+											<label class="form-check-label" for="Mademoiselle">Mademoiselle</label>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre nom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="nomInscriptionFormateur" name="nom" placeholder="Veuillez saisir votre nom" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre prenom <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="prenomInscriptionFormateur" name="prenom" placeholder="Veuillez saisir votre prenom" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre adresse <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="adresseInscriptionFormateur" name="adresse" placeholder="Veuillez saisir votre adresse" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre complément d'adresse </label>
+											<input class="form-control" id="adresse2lInscriptionFormateur" name="adresse2" placeholder="Veuillez saisir votre complément d'adresse (Bâtiment, résidence, ...)">
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre code postal <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="codePostalInscriptionFormateur" name="codePostal" placeholder="Veuillez saisir votre code postal" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre ville <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" id="villeInscriptionFormateur" name="ville" placeholder="Veuillez saisir votre ville" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre téléphone mobile <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="tel" id="mobileInscriptionFormateur" name="mobile" placeholder="Veuillez saisir votre téléphone mobile">
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre téléphone fix</label>
+											<input class="form-control" type="tel" id="fixInscriptionFormateur" name="fix" placeholder="Veuillez saisir votre téléphone fix" required>
+										</div>
+										<div class="form-group mb-3">
+											<label>Votre adresse e-mail <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="email" id="emailInscriptionFormateur" name="email" placeholder="Veuillez saisir votre adresse e-mail" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Votre mot de passe <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="password" id="passwordInscriptionFormateur" name="password" placeholder="Veuillez saisir votre mot de passe" required>
+										</div>
+										<div class="form-group mb-3 w-75">
+											<label>Confirmer votre mot de passe <span class="font-weight-bold">(*)</span></label>
+											<input class="form-control" type="password" id="password2InscriptionFormateur" name="password2" placeholder="Veuillez confirmer votre mot de passe" required>
+										</div>
+
+										<div class="form-group mb-3 text-center">
+											<button class="btn btn-outline-default btn-md" type="submit">Créer mon compte</button>
+										</div>
+									  
+									</form>
+			                    </div>
+			                  <div class="col-md-0"></div>
+			              </div>
+			          </div>
+			      </div>
+			      <div class="modal-footer text-center">
+			      	  <div class="container">
+			              <div class="row">
+			              	<div class="col-md-4"></div>
+			              	<div class="col-md-4 text-center">
+			              		{% if echecInscriptionFormateur is defined %}
+			                  		<a href="home/" class="btn btn btn-dark" data-dismiss="modal">Fermer</a>
+			                  	{% else %}
+			                  		<button type="button" class="btn btn btn-dark" data-dismiss="modal">Fermer</button>
+			                  	{% endif %}
+			              	</div>
+			              	<div class="col-md-4 text-center"><h6><span class="font-weight-bold">(*)</span> champs obligatoire</h6></div>
+			              </div>
+			          </div>
+			             
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+			<!-- END Inscription Formateur -->
+    	{% endblock %}
+        {% block body %}{% endblock %}
+        {% block footers %}
+        	<!-- footer part start-->
+		    <footer class="footer-area border-top border-warning">
+		        <div class="container">
+		            <div class="row justify-content-between">
+		                <div class="col-sm-6 col-md-4 col-xl-3">
+		                    <div class="single-footer-widget footer_1">
+		                        <a href="index.html"> <img src="/img/logo.png" alt=""> </a>
+		                        <p>Vous êtes un organisme de formation et vous cherchez des formateurs intervenants pour se changer de vos formations ? Vous êtes un formateur intervenant et vous cherchez des missions de formation ? </p>
+		                        <p>Ce site vous offre la possibilité de trouver ce que vous cherchez </p>
+		                    </div>
+		                </div>
+		                <div class="col-sm-6 col-md-4 col-xl-4">
+		                    <div class="single-footer-widget footer_2">
+		                        <h4>Bulletin </h4>
+		                        <p>Restez à jour avec nos dernières tendances
+		                        </p>
+		                        <form action="#">
+		                            <div class="form-group">
+		                                <div class="input-group mb-3">
+		                                    <input type="text" class="form-control" placeholder="entrer l'adresse e-mail"
+		                                        onfocus="this.placeholder = ''"
+		                                        onblur="this.placeholder = 'entrer adresse e-mail'">
+		                                    <div class="input-group-append">
+		                                        <button class="btn btn_1 footer-button-hover" type="button"><i class="fas fa-angle-right"></i></button>
+		                                    </div>
+		                                </div>
+		                            </div>
+		                        </form>
+		                    </div>
+		                </div>
+		                <div class="col-xl-3 col-sm-6 col-md-4">
+		                    <div class="single-footer-widget footer_2">
+		                        <h4>Contactez nous</h4>
+		                        <div class="contact_info">
+		                            <p><span> Address :</span> ****************</p>
+		                            <p><span> Phone :</span> ************</p>
+		                            <p><span> Email : </span>************* </p>
+		                        </div>
+		                    </div>
+		                </div>
+		            </div>
+
+		        </div>
+
+
+		        <div class="copyright_part_text text-center mt-1">
+		        	<div class="container-fluid">
+			            <div class="row">
+			            	<div class="col-lg-4"></div>
+			                <div class="col-lg-4">
+		                        <p class="footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+								Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved <i class="ti-heart" aria-hidden="true"></i> 
+								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+			                </div>
+			                <div class="col-lg-4">
+			                	<div class="container-fluid">
+			                		<div class="row text-center ">
+				                			<div class="col-md-2"></div>
+						                		<div class="col-md-8"> <a href="https://www.facebook.com/" target="_blank">
+						                			<i class="fab fa-facebook-square icon-hover"></i></a><span class="ml-3"></span>
+						                		    <a href="https://twitter.com/" target="_blank">
+						                			<i class="fab fa-twitter icon-hover"></i></a><span class="ml-3"></span>
+						                			<a href="https://aboutme.google.com/" target="_blank">
+						                			<i class="fab fa-google-plus icon-hover"></i></a>
+						                		</div>
+						                		<div class="col-md-2"></div>
+				                		</div>          		
+			                	</div>
+			                </div>
+			            </div>
+			        </div>
+		        </div>
+		        
+		    </footer>
+		    <!-- footer part end-->
+        {% endblock %}
+        {% block javascripts %}
+        	<!--====== Javascripts & Jquery ======-->
+			<script src="/js/jquery-3.2.1.min.js"></script>
+			<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+			<script type="text/javascript" src="https://cdn.rawgit.com/dubrox/Multiple-Dates-Picker-for-jQuery-UI/master/jquery-ui.multidatespicker.js"></script>
+			<script src="https://kit.fontawesome.com/83a11dbedd.js" crossorigin="anonymous"></script>
+			<script src="{{asset('/js/bootstrap.min.js')}}"></script>
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+			<script type="text/javascript">
+				// $(function () {
+				//     $('.selectpicker').selectpicker();
+				// });
+
+			</script>
+			<script src="https://cdn.rawgit.com/PascaleBeier/bootstrap-validate/v2.2.0/dist/bootstrap-validate.js"></script>
+
+			
+			<script type="text/javascript">
+				// Connexion organisme
+				bootstrapValidate(['#emailConnexionOrganisme'], 'email:Entrer une adresse email valid');
+				bootstrapValidate(['#passwordConnexionOrganisme'], 'regex:^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,}):• Au moins une lettre minuscule<br>• Au moins une lettre majuscule<br>• Au moins un chiffre<br>• Au moins huit caractères');
+				// Connexion Formateur
+				bootstrapValidate(['#emailConnexionFormateur'], 'email:Entrer une adresse email valid');
+				bootstrapValidate(['#passwordConnexionFormateur'], 'regex:^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,}):• Au moins une lettre minuscule<br>• Au moins une lettre majuscule<br>• Au moins un chiffre<br>• Au moins huit caractères');
+				// Inscription organisme
+				bootstrapValidate(['#emailInscriptionOrganisme'], 'email:Entrer une adresse email valid');
+				bootstrapValidate(['#fixInscriptionOrganisme'], 'regex:^0[1-9]([-. ]?[0-9]{2}){4}$:Entrer un numéro de téléphone valide');
+				bootstrapValidate(['#passwordInscriptionOrganisme'], 'regex:^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,}):Le mot de passe doit contenir<br>• Au moins une lettre minuscule<br>• Au moins une lettre majuscule<br>• Au moins un chiffre<br>• Au moins huit caractères');
+				bootstrapValidate(['#password2InscriptionOrganisme'], 'matches:#passwordInscriptionOrganisme:le mot de passe ne correspond pas');
+				// Inscription formateur
+				bootstrapValidate(['#emailInscriptionFormateur'], 'email:Entrer une adresse email valid');
+				bootstrapValidate(['#mobileInscriptionFormateur'], 'regex:^0[1-9]([-. ]?[0-9]{2}){4}$:Entrer un numéro de téléphone valide');
+				bootstrapValidate(['#passwordInscriptionFormateur'], 'regex:^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,}):Le mot de passe doit contenir<br>• Au moins une lettre minuscule<br>• Au moins une lettre majuscule<br>• Au moins un chiffre<br>• Au moins huit caractères');
+				bootstrapValidate(['#password2InscriptionFormateur'], 'matches:#passwordInscriptionFormateur:le mot de passe ne correspond pas');
+				// Update Profile Formateur
+				bootstrapValidate('#form_cv', 'endsWith:.pdf:votre cv doit être un document PDF');
+				bootstrapValidate(['#mobileProfileFormateur'], 'regex:^0[1-9]([-. ]?[0-9]{2}){4}$:Entrer un numéro de téléphone valide');
+				bootstrapValidate(['#fixProfileOrganisme'], 'regex:^0[1-9]([-. ]?[0-9]{2}){4}$:Entrer un numéro de téléphone valide');
+				
+				function validateFormConnexionOrganisme() {
+				  if ( $('.has-error-email').css('display') == 'inline-block' || $('.has-error-regex').css('display') == 'inline-block' || ($('#emailConnexionOrganisme').val() == '' || $('#passwordConnexionOrganisme').val() == '')) {
+				    $('#errorConnexionOrganisme').show();
+				    setTimeout(function(){
+					   $('#errorConnexionOrganisme').hide();
+					}, 6000);
+				    return false;
+				  }
+				}
+				function validateFormConnexionFormateur() {
+				  if ( $('.has-error-email').css('display') == 'inline-block' || $('.has-error-regex').css('display') == 'inline-block' || ($('#emailConnexionFormateur').val() == '' || $('#passwordConnexionFormateur').val() == '')) {
+				    $('#errorConnexionFormateur').show();
+				    setTimeout(function(){
+					   $('#errorConnexionFormateur').hide();
+					}, 6000);
+				    return false;
+				  }
+				}
+
+
+				function validateFormInscriptionOrganisme() {
+				  if ( $('.has-error-email').css('display') == 'inline-block' || $('.has-error-regex').css('display') == 'inline-block' || $('.has-error-contains').css('display') == 'inline-block' || ($('#nomInscriptionOrganisme').val() == '' || $('#prenomInscriptionOrganisme').val() == '' || $('#raisonSocialInscriptionOrganisme').val() == '' || $('#adresseInscriptionOrganisme').val() == '' || $('#codePostalInscriptionOrganisme').val() == '' || $('#villeInscriptionOrganisme').val() == '' || $('#fixInscriptionOrganisme').val() == '' || $('#emailInscriptionOrganisme').val() == '' || $('#passwordInscriptionOrganisme').val() == '' || $('#password2InscriptionOrganisme').val() == '')) {
+				    $('#errorInscriptionOrganisme').show();
+				    setTimeout(function(){
+					   $('#errorInscriptionOrganisme').hide();
+					}, 6000);
+				    return false;
+				  }
+				}
+
+				function validateFormInscriptionFormateur() {
+				  if ( $('.has-error-email').css('display') == 'inline-block' || $('.has-error-regex').css('display') == 'inline-block' || $('.has-error-contains').css('display') == 'inline-block' || ($('#nomInscriptionFormateur').val() == '' || $('#prenomInscriptionFormateur').val() == '' || $('#adresseInscriptionFormateur').val() == '' || $('#codePostalInscriptionFormateur').val() == '' || $('#villeInscriptionFormateur').val() == '' || $('#mobileInscriptionFormateur').val() == '' || $('#emailInscriptionFormateur').val() == '' || $('#passwordInscriptionFormateur').val() == '' || $('#password2InscriptionFormateur').val() == '')) {
+				    $('#errorInscriptionFormateur').show();
+				    setTimeout(function(){
+					   $('#errorInscriptionFormateur').hide();
+					}, 6000);
+				    return false;
+				  }
+				}
+				function validateProfileFormateur() {
+				  if (  $('.has-error-regex').css('display') == 'inline-block' || $('.has-error-contains').css('display') == 'inline-block' || ($('#nomProfileFormateur').val() == '' || $('#prenomProfileFormateur').val() == '' || $('#adresseProfileFormateur').val() == '' || $('#codePostalProfileFormateur').val() == '' || $('#villeProfileFormateur').val() == '' || $('#mobileProfileFormateur').val() == '' )) {
+				    $('#errorProfileFormateur').show();
+				    setTimeout(function(){
+					   $('#errorProfileFormateur').hide();
+					}, 6000);
+				    return false;
+				  }
+				}
+				function validateProfileOrganisme() {
+				  if (  $('.has-error-regex').css('display') == 'inline-block' || $('.has-error-contains').css('display') == 'inline-block' || ($('#nomProfileOrganisme').val() == '' || $('#prenomProfileOrganisme').val() == '' || $('#adresseProfileOrganisme').val() == '' || $('#codePostalProfileOrganisme').val() == '' || $('#villeProfileOrganisme').val() == '' || $('#raisonSocialeProfileOrganisme').val() == '' || $('#mobileProfileOrganisme').val() == '' )) {
+				    $('#errorProfileOrganisme').show();
+				    setTimeout(function(){
+					   $('#errorProfileOrganisme').hide();
+					}, 6000);
+				    return false;
+				  }
+				}
+
+				function validateFraisFormateur() {
+				  if ( $('#fraisRepas').val() == '' || $('#fraisHotel').val() == '' || $('#fraisDeplacement').val() == '') {
+				    $('#errorFraisFormateur').show();
+				    setTimeout(function(){
+					   $('#errorFraisFormateur').hide();
+					}, 6000);
+				    return false;
+				  }
+				  
+				  
+				}
+
+				function validateDepartementFormateur() {
+				  
+				  var departement = $('#departement').val(); 
+            	  var comparingText = "Nothing selected ";
+            	  var all = "all";
+				  if (departement  == comparingText || departement == "") {
+				  	$('#departement').val(all);
+				  }
+				  var date = $('#search-date1').val();
+				  date = date.replace(/\s/g, '');
+				  $('#search-date1').val(date);
+				  
+				  
+				}
+
+				function validateDateDisponibiliteFormateur() {
+				  
+				  var date = $('#search-date1').val();
+				  date = date.replace(/\s/g, '');
+				  $('#search-date1').val(date);
+				  
+				  
+				}
+
+			</script>
+			
+			
+			<script src="{{asset('/js/owl.carousel.min.js')}}"></script>
+			<script src="{{asset('/js/circle-progress.min.js')}}"></script>
+			<!-- FastClick -->
+		    <script src="{{asset('/vendors/fastclick/lib/fastclick.js')}}"></script>
+		    <!-- NProgress -->
+		    <script src="{{asset('/vendors/nprogress/nprogress.js')}}"></script>
+		    <!-- morris.js -->
+		    <script src="{{asset('/vendors/raphael/raphael.min.js')}}"></script>
+		    <script src="{{asset('vendors/morris.js/morris.min.js')}}"></script>
+		    <!-- bootstrap-daterangepicker -->
+		    <script src="{{asset('/vendors/moment/min/moment.min.js')}}"></script>
+		    <script src="{{asset('/vendors/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+		    <script src="{{asset('/dist/overhang.min.js')}}"></script>
+		    <!-- Custom Theme Scripts -->
+		    <script src="{{asset('/build/js/custom.min.js')}}"></script>
+		    {% if formateur is defined %}
+		    	{% set dateDisponibilite = formateur.dateDisponibilite|split(',') %}
+		    	{% set dateDisponibilite2 = formateur.dateDisponibilite|split(',') %}
+		    {% endif %}
+		    
+		    <script type="text/javascript">
+				$( document ).ready(function() {
+					
+					$('#search-date2').multiDatesPicker();
+					$('#search-date1').focus(function(){
+					  var that = this;
+					  setTimeout(function(){ that.selectionStart = that.selectionEnd = 10000; }, 0);
+					  $('#search-date1').datepicker('show');
+					});
+					$('.selectpicker').selectpicker();
+					$('ul.dropdown-menu li:first').addClass('selected');
+					$('.selectpicker').change(function() {
+					$('.filter-option-inner-inner').css("max-width","550px");
+					var departement = $('.dropdown-toggle').text();
+					$('#departement').val(departement);
+					var all = $('option[value=all]'); 
+					var thisVal = all.html();
+					if (all.is(':selected')) {
+				        $('.selectpicker').selectpicker('deselectAll');    
+				        // $('ul.dropdown-menu > li[rel=0]').addClass('selected');
+				        $('ul.dropdown-menu li:first').addClass('selected');
+				        // $('.selectpicker').selectpicker('val', 'all');
+				        
+				        $('span.filter-option').html(thisVal);
+				        $('.filter-option-inner-inner').text("Tous les départements");
+				        // if ($('.dropdown-toggle').text() == "Nothing selected") {$('.dropdown-toggle').text('Tous les départements');}
+				    } else {
+				        $('ul.dropdown-menu li:first').removeClass('selected');
+				    }
+					});
+					// Hide the div
+		    		$(".alert-danger").hide();
+		    		{% if formateur is defined%}
+		    			$('#search-date1').multiDatesPicker();
+				    	$('#search-date').multiDatesPicker({
+						    	addDisabledDates: [{% for date in dateDisponibilite %}'{{date}}',{% endfor %}]
+							    });
+				    	{%  if dateDisponibilite is not empty %}
+				    		
+		    				$('#search-date1').multiDatesPicker({
+						    	addDates: [{% for date in dateDisponibilite2 %}'{{date}}',{% endfor %}],
+								value: '{{formateur.dateDisponibilite}}'
+								
+							    });
+					    {% else %}
+					    	$('#search-date1').multiDatesPicker();
+					    {% endif %}
+						// $( "#search-date1" ).datepicker( "option", "numberOfMonths", [ 2, 3 ] );
+					    $('#search-date').datepicker('show');
+					    $('#search-date').focus();
+		    		{% endif %}
+
+		    		var debounce;
+					  $(window).resize(function() {
+					    clearTimeout(debounce);
+					    if ($(window).width() < 400) {
+					      debounce = setTimeout(function() {
+					        debounceDatepicker(1)
+					      }, 250);
+					    } else if ($(window).width() < 1000) {
+					    	debounce = setTimeout(function() {
+					        debounceDatepicker(2)
+					      }, 250);
+					    } else if ($(window).width() < 1250) {
+					    	debounce = setTimeout(function() {
+					        debounceDatepicker(3)
+					      }, 250);
+					    } else {
+					      debounce = setTimeout(function() {
+					        debounceDatepicker(4)
+					      }, 250);
+					    }
+					  }).trigger('resize');
+
+					  function debounceDatepicker(no) {
+					    $("#search-date1").datepicker("option", "numberOfMonths", no);
+					    $("#search-date").datepicker("option", "numberOfMonths", no);
+					  }
+
+					  $('#editSessionModal').on('show.bs.modal', function(e) {
+
+						    //get data-id attribute of the clicked element
+						    var formateurId = $(e.relatedTarget).data('formateur-id');
+						    var organismeId = $(e.relatedTarget).data('organisme-id');
+						    var formateurNom = $(e.relatedTarget).data('formateur-nom');
+
+						    //populate the textbox
+						    $(e.currentTarget).find('input[name="id_formateur"]').val(formateurId);
+						    $(e.currentTarget).find('input[name="id_organisme"]').val(organismeId);
+						    $(e.currentTarget).find('input[name="nomFormateur"]').val(formateurNom);
+						});
+										    
+				});
+			</script>
+			<script src="{{asset('/js/main.js')}}"></script>
+        {% endblock %}
+    </body>
+</html>
